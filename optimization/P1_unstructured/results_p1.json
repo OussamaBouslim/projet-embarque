@@ -1,0 +1,19 @@
+{
+  "technique": "P1 - Elagage Non Structure",
+  "meilleur_taux": 0.1,
+  "historique": [
+    {
+      "taux": 0.1,
+      "accuracy_val": 0.9498
+    },
+    {
+      "taux": 0.2,
+      "accuracy_val": 0.7902
+    }
+  ],
+  "accuracy": 0.958,
+  "f1_score": 0.9571,
+  "taille_mo": 11.22,
+  "compression": 1.0,
+  "inference_ms": 20.66
+}

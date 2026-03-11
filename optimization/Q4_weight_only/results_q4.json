@@ -1,0 +1,8 @@
+{
+  "technique": "Q4 - Weight-Only",
+  "accuracy": 0.9602,
+  "f1_score": 0.9605,
+  "taille_mo": 9.34,
+  "compression": 1.2,
+  "inference_ms": 20.15
+}

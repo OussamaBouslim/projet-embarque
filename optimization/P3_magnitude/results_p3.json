@@ -1,0 +1,32 @@
+{
+  "technique": "P3 - Elagage Magnitude Iteratif (pointwise)",
+  "note": "Depthwise ignorees \u2014 pointwise uniquement",
+  "meilleur_taux": 0.3,
+  "historique": [
+    {
+      "taux": 0.1,
+      "accuracy_val": 0.9578,
+      "couches": 34
+    },
+    {
+      "taux": 0.2,
+      "accuracy_val": 0.9487,
+      "couches": 34
+    },
+    {
+      "taux": 0.3,
+      "accuracy_val": 0.9601,
+      "couches": 34
+    },
+    {
+      "taux": 0.4,
+      "accuracy_val": 0.7879,
+      "couches": 34
+    }
+  ],
+  "accuracy": 0.9636,
+  "f1_score": 0.9636,
+  "taille_mo": 11.22,
+  "compression": 1.0,
+  "inference_ms": 20.49
+}

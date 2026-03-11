@@ -1,0 +1,8 @@
+{
+  "technique": "Q3 - QAT (fine-tuning simule Windows)",
+  "accuracy": 0.9477,
+  "f1_score": 0.9487,
+  "taille_mo": 9.34,
+  "compression": 1.2,
+  "inference_ms": 17.2
+}

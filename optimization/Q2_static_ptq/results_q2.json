@@ -1,0 +1,15 @@
+{
+  "technique": "Q2 - Quantification Statique PTQ (Windows)",
+  "note": "fbgemm/qnnpack non support\u00e9s sur Windows \u2014 quantification dynamique avec calibration",
+  "calibration_stats": {
+    "nb_activations": 520,
+    "moyenne": 0.2139,
+    "ecart_type": 0.1824,
+    "max": 0.9611
+  },
+  "accuracy": 0.9602,
+  "f1_score": 0.9605,
+  "taille_mo": 9.34,
+  "compression": 1.2,
+  "inference_ms": 19.63
+}

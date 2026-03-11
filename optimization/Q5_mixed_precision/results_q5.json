@@ -1,0 +1,8 @@
+{
+  "technique": "Q5 - Pr\u00e9cision Mixte",
+  "accuracy": 0.9602,
+  "f1_score": 0.9605,
+  "taille_mo": 9.34,
+  "compression": 1.2,
+  "inference_ms": 17.5
+}
