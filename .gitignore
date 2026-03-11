@@ -1,0 +1,5 @@
+dataset/chest_xray/ 
+dataset/chest_xray_clean/ 
+*.pt 
+results/ 
+__pycache__/ 

@@ -1,0 +1,60 @@
+version: '3.8'
+
+# ─────────────────────────────────────────────────────────
+# 3 machines virtuelles simulant des appareils IoT réels
+# Lance avec : docker-compose up -d
+# Arrête avec : docker-compose down
+# ─────────────────────────────────────────────────────────
+
+services:
+
+  # VM1 — Capteur IoT bas de gamme (très contraint)
+  vm1:
+    image: python:3.10-slim
+    container_name: vm1_capteur_iot
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'      # Maximum 1 cœur CPU
+          memory: 500M     # Maximum 500 Mo RAM
+    volumes:
+      - ./optimization:/models
+      - ./deployment:/scripts
+      - ./dataset/chest_xray_clean:/data
+    command: sleep infinity
+    environment:
+      - VM_ID=VM1
+
+  # VM2 — Passerelle IoT (intermédiaire)
+  vm2:
+    image: python:3.10-slim
+    container_name: vm2_gateway_iot
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+    volumes:
+      - ./optimization:/models
+      - ./deployment:/scripts
+      - ./dataset/chest_xray_clean:/data
+    command: sleep infinity
+    environment:
+      - VM_ID=VM2
+
+  # VM3 — Edge Server (plus capable)
+  vm3:
+    image: python:3.10-slim
+    container_name: vm3_edge_server
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+    volumes:
+      - ./optimization:/models
+      - ./deployment:/scripts
+      - ./dataset/chest_xray_clean:/data
+    command: sleep infinity
+    environment:
+      - VM_ID=VM3
