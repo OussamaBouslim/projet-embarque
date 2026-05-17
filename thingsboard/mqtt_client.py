@@ -30,7 +30,6 @@ DEVICES = {
     }
 }
 
-# Précisions des modèles (résultats réels)
 ACCURACIES = {
     "VM1_Capteur": 96.02,
     "VM2_Gateway": 96.02,
@@ -65,10 +64,10 @@ def connect_device(name, token):
 # SIMULATION PATIENTS
 # ============================================================
 def simulate_inference(vm_name):
-    """Simule une inférence médicale sur une VM."""
     classes = ["NORMAL", "PNEUMONIA"]
     prediction = random.choice(classes)
     confidence = round(random.uniform(88, 99), 1)
+
     latency_ms = random.randint(
         80 if vm_name == "VM1_Capteur" else 120,
         160 if vm_name == "VM1_Capteur" else 220
@@ -77,10 +76,15 @@ def simulate_inference(vm_name):
         150 if vm_name == "VM1_Capteur" else 300,
         400 if vm_name == "VM1_Capteur" else 900
     )
-    return prediction, confidence, latency_ms, ram_used
+    # CPU simulé — VM1 plus chargée car 1 seul cœur
+    cpu_usage = round(random.uniform(
+        60 if vm_name == "VM1_Capteur" else 25,
+        95 if vm_name == "VM1_Capteur" else 70
+    ), 1)
+
+    return prediction, confidence, latency_ms, ram_used, cpu_usage
 
 def vote_collectif(results):
-    """Vote majoritaire pour l'intelligence collective."""
     votes = [r["prediction"] for r in results]
     pneumonia_votes = votes.count("PNEUMONIA")
     normal_votes = votes.count("NORMAL")
@@ -92,7 +96,8 @@ def vote_collectif(results):
 # ============================================================
 # ENVOI TÉLÉMÉTRIE
 # ============================================================
-def send_telemetry(client, vm_name, patient_id, prediction, confidence, latency_ms, ram_used, decision_collective):
+def send_telemetry(client, vm_name, patient_id, prediction, confidence,
+                   latency_ms, ram_used, cpu_usage, decision_collective):
     payload = {
         "patient_id": patient_id,
         "vm_name": vm_name,
@@ -102,6 +107,7 @@ def send_telemetry(client, vm_name, patient_id, prediction, confidence, latency_
         "latency_ms": latency_ms,
         "ram_used_mb": ram_used,
         "ram_total_mb": DEVICES[vm_name]["ram_mb"],
+        "cpu_usage_pct": cpu_usage,
         "accuracy_pct": ACCURACIES[vm_name],
         "decision_collective": decision_collective,
         "timestamp": int(time.time() * 1000)
@@ -114,7 +120,7 @@ def send_telemetry(client, vm_name, patient_id, prediction, confidence, latency_
     )
 
     if result.rc == 0:
-        print(f"  📡 [{vm_name}] → {prediction} ({confidence}%) | {latency_ms}ms | RAM: {ram_used}MB")
+        print(f"  📡 [{vm_name}] → {prediction} ({confidence}%) | {latency_ms}ms | RAM: {ram_used}MB | CPU: {cpu_usage}%")
     else:
         print(f"  ❌ [{vm_name}] Erreur d'envoi (code={result.rc})")
 
@@ -128,32 +134,31 @@ def main():
     print("=" * 60)
     print()
 
-    # Connexion des 3 VMs
     for name, info in DEVICES.items():
         clients[name] = connect_device(name, info["token"])
 
-    time.sleep(2)  # Attendre connexions
+    time.sleep(2)
     print()
 
-    # Simulation de 10 patients
     for i in range(1, 11):
         patient_id = f"P-2026-{i:03d}"
         print(f"Patient {patient_id}")
 
         results = []
         for vm_name in DEVICES:
-            pred, conf, lat, ram = simulate_inference(vm_name)
+            pred, conf, lat, ram, cpu = simulate_inference(vm_name)
             results.append({
                 "vm": vm_name,
                 "prediction": pred,
-                "confidence": conf
+                "confidence": conf,
+                "latency_ms": lat,
+                "ram_used": ram,
+                "cpu_usage": cpu
             })
 
-        # Vote collectif
         decision, nb_votes = vote_collectif(results)
         print(f"  🧠 Décision collective : {decision} ({nb_votes}/3 votes)")
 
-        # Envoi télémétrie pour chaque VM
         for j, vm_name in enumerate(DEVICES):
             r = results[j]
             send_telemetry(
@@ -162,14 +167,15 @@ def main():
                 patient_id,
                 r["prediction"],
                 r["confidence"],
-                *simulate_inference(vm_name)[2:],
+                r["latency_ms"],
+                r["ram_used"],
+                r["cpu_usage"],
                 decision
             )
 
         time.sleep(1)
         print()
 
-    # Statistiques finales
     print("=" * 60)
     print("  STATISTIQUES FINALES")
     print("=" * 60)
@@ -179,7 +185,6 @@ def main():
     print("✅ Démo terminée ! Vérifiez le dashboard : http://localhost:9090")
     print()
 
-    # Arrêt propre
     for client in clients.values():
         client.loop_stop()
         client.disconnect()
