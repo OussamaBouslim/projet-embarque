@@ -11,19 +11,19 @@ THINGSBOARD_PORT = 1883
 
 DEVICES = {
     "VM1_Capteur": {
-        "token": "jtes3x4jii0vinis0gdu",
+        "token": "wwu5jp5yayyvbmkx3wcb",
         "modele": "Q2_Static_PTQ",
         "cores": 1,
         "ram_mb": 500
     },
     "VM2_Gateway": {
-        "token": "4fpqxTyMzfIJ6qVfwPMH",
+        "token": "4x7xk74ukmugdb2zt39c",
         "modele": "Q4_Weight_Only",
         "cores": 2,
         "ram_mb": 1024
     },
     "VM3_Edge": {
-        "token": "ece8abdKm5NPGDX9s6PZ",
+        "token": "z6jffkocwc0zi92uyasa",
         "modele": "Q5_Mixed_Precision",
         "cores": 2,
         "ram_mb": 2048
